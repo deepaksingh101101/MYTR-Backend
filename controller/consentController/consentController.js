@@ -57,7 +57,7 @@ export const uploadImage = async (req, res, next) => {
                 const buildImage = await uploadImageMiddleware(file, 'single');
                 res.send({
                     status: "SUCCESS",
-                    imageName: buildImage
+                    imageUrl: buildImage
                 });
                 
             } catch (err) {

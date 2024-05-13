@@ -1,6 +1,6 @@
 import path, { parse } from 'path'
 
-import { getStorage, ref ,uploadBytesResumable } from 'firebase/storage'
+import { getDownloadURL, getStorage, ref ,uploadBytesResumable } from 'firebase/storage'
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth"
 import { auth } from '../config/firbase.config.js';
 
@@ -17,8 +17,19 @@ export const uploadImageMiddleware = async (file, quantity) => {
             const metadata = {
                 contentType: file.type,
             };
-            await uploadBytesResumable(storageRef, file.buffer, metadata);
-            return fileName;
+
+            // Initiate the upload task
+            const uploadTask = uploadBytesResumable(storageRef, file.buffer, metadata);
+
+            // Wait for the upload task to complete
+            await uploadTask;
+
+            // Once the upload is complete, get the download URL
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+
+            console.log("File available at", downloadURL);
+            
+            return downloadURL;
         }
 
         if (quantity === 'multiple') {
