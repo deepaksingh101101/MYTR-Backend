@@ -41,6 +41,10 @@ const consentModelSchema=new mongoose.Schema({
     signatureUrl:{
         type:String,
         required:true,
+    },
+    VideoUrl:{
+        type:String,
+        required:true,
     }
 },{
     timestamps:true

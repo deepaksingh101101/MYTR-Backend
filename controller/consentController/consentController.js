@@ -8,10 +8,11 @@ import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "fire
 import { auth } from '../../config/firbase.config.js';
 
 import {uploadImageMiddleware} from '../../helpers/uploadImageMiddleware.js'
+import { uploadVideoMiddleware } from '../../helpers/uploadVideoMiddleware.js';
 
 export const saveConsentFormData = async (req, res, next) => {
     const errors = validationResult(req);
-    const { patientName, gaurdianName, caseType, question, signatureUrl, patientId, mobileNo, adharCard } = req.body;
+    const { patientName, gaurdianName, caseType, question, signatureUrl, patientId, mobileNo, adharCard,VideoUrl } = req.body;
 
     try {
         if (errors.isEmpty()) {
@@ -22,9 +23,10 @@ export const saveConsentFormData = async (req, res, next) => {
                 caseType,
                 question,
                 signatureUrl,
+                VideoUrl,
                 patientId,
                 mobileNo,
-                adharCard
+                adharCard,
             });
 
             // Save the consent data to the database
@@ -63,6 +65,38 @@ export const uploadImage = async (req, res, next) => {
             } catch (err) {
                 console.log(err);
                 return res.status(500).json({ status: false, message: "Error uploading image" });
+            }
+        } else {
+            return res.status(422).json({ status: false, errors: errors.array() });
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        return res.status(500).json({ status: false, message: "Internal Server Error" });
+    }
+};
+
+
+export const uploadVideo = async (req, res, next) => {
+    const errors = validationResult(req);
+
+    try {
+        if (errors.isEmpty()) {
+            const file = {
+                type: req.files.video.mimetype,
+                buffer: req.files.video.data
+            };
+           
+
+            try {
+                const buildImage = await uploadVideoMiddleware(file, 'single');
+                res.send({
+                    status: "SUCCESS",
+                    videoUrl: buildImage
+                });
+                
+            } catch (err) {
+                console.log(err);
+                return res.status(500).json({ status: false, message: "Error uploading Video" });
             }
         } else {
             return res.status(422).json({ status: false, errors: errors.array() });
