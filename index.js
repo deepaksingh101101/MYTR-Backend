@@ -5,9 +5,10 @@ import { connectToMongo } from './database/database.js';
 import userRouter from './routes/userRoutes.js';
 import consentRouter from './routes/consentRoutes.js';
 import templateRouter from './routes/templateRoutes.js';
+import cors from 'cors'
 
 const app=express();
-
+app.use(cors())
 connectToMongo();
 dotenv.config()
 
