@@ -16,6 +16,8 @@ export const saveConsentFormData = async (req, res, next) => {
 
     try {
         if (errors.isEmpty()) {
+
+
             // Create a new instance of the consent model
             const consentData = new consentModel({
                 patientName,
