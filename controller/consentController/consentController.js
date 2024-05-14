@@ -127,8 +127,8 @@ export const uploadImage = async (req, res, next) => {
     try {
         if (errors.isEmpty()) {
             const file = {
-                type: req.files.Image.mimetype,
-                buffer: req.files.Image.data
+                type: req.files?.Image?.mimetype,
+                buffer: req.files?.Image?.data
             };
 
             try {
@@ -158,8 +158,8 @@ export const uploadVideo = async (req, res, next) => {
     try {
         if (errors.isEmpty()) {
             const file = {
-                type: req.files.video.mimetype,
-                buffer: req.files.video.data
+                type: req.files?.video?.mimetype,
+                buffer: req.files?.video?.data
             };
            
 
