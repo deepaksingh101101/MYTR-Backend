@@ -117,14 +117,14 @@ export const getTemplateById = async (req, res, next) => {
 
 
 
-export const getTemplateByCaseType = async (req, res, next) => {
+export const getQuestionByCaseType = async (req, res, next) => {
     try {
         let caseType = req.query.caseType.toLowerCase(); // Convert to lowercase
 
         const template = await templateModel.findOne({ caseType }); // Using findOne to get only one template
 
         if (!template) {
-            return res.status(404).json({ status: false, message: "No Template found with this Case" });
+            return res.status(200).json({ status: true, questions:template });
         }
 
         // Assuming you want to return only the questions
@@ -135,6 +135,13 @@ export const getTemplateByCaseType = async (req, res, next) => {
         console.error("Error:", error);
         return res.status(500).json({ status: false, message: "Internal Server Error" });
     }
+};
+
+
+
+export const getAllCaseType = async (req, res, next) => {
+  
+    res.status(200).json({status:true,caseType:["cancer","fever","cough","legal"]})
 };
 
 

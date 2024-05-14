@@ -20,11 +20,15 @@ const consentModelSchema=new mongoose.Schema({
         type:String,
         required:true,
     },
-    patientId:{
+    adharCard:{
         type:String,
         required:true,
     },
-    adharCard:{
+    address:{
+        type:String,
+        required:true,
+    },
+    dob:{
         type:String,
         required:true,
     },
@@ -36,7 +40,11 @@ const consentModelSchema=new mongoose.Schema({
         type:String,
         required:true,
     },
-    question:{
+    question: {
+        type: Object,
+        required: true
+    },
+    gender:{
         type:String,
         required:true,
     },
