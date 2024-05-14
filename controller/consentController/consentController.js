@@ -43,8 +43,6 @@ export const saveConsentFormData = async (req, res, next) => {
     }
 };
 
-
-
 export const getAllConsent = async (req, res, next) => {
     try {
         const consentData = await consentModel.find();

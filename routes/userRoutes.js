@@ -3,6 +3,7 @@ import {  accessTokenFromRefresh, deleteUser, getAllUsers, loginController, regi
 import { isLogedIn } from "../middleware/isLogedIn.js";
 
 import  { ForgetDataValidate, loginDataValidate, newPasswordDataValidate, otpDataValidate, registerDataValidate }  from '../validation/loginDataValidate.js'
+import { isSuperAdmin } from "../middleware/isSuperAdmin.js";
 
 
 const userRouter=express.Router();
@@ -17,7 +18,7 @@ userRouter.post('/verifyOtp',otpDataValidate,verifyOtp)
 userRouter.post('/changePassword',newPasswordDataValidate,resetPasswordAfterVerification)
 userRouter.post('/getAccessFromRefresh',accessTokenFromRefresh)
 userRouter.get('/getAllUsers',isLogedIn,getAllUsers)
-userRouter.delete('/deleteAdmin',isLogedIn,deleteUser)
+userRouter.delete('/deleteAdmin',isLogedIn,isSuperAdmin,deleteUser)
 
 
 
