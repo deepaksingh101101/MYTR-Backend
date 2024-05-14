@@ -3,8 +3,10 @@ import mongoose from "mongoose";
 const consentModelSchema=new mongoose.Schema({
 
     createdBy:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"user"
+        type:String,
+    },
+    updatedBy:{
+        type:String,
     },
     patientName:{
         type:String,
@@ -39,6 +41,10 @@ const consentModelSchema=new mongoose.Schema({
         required:true,
     },
     signatureUrl:{
+        type:String,
+        required:true,
+    },
+    VideoUrl:{
         type:String,
         required:true,
     }

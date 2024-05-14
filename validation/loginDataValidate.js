@@ -22,4 +22,6 @@ export const registerDataValidate = [
   body('email', 'Invalid email').isEmail(),
   body('isSuperAdmin', 'isSuperAdmin Should be of Boolean Type').isBoolean(),
   body('password', 'The minimum password length is 6 characters').isLength({min: 6}),
+  body('loggedInUserId', 'loggedInUserId  is Required').notEmpty(),
+
 ]

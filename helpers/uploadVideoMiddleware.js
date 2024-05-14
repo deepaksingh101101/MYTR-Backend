@@ -4,7 +4,7 @@ import { getDownloadURL, getStorage, ref ,uploadBytesResumable } from 'firebase/
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth"
 import { auth } from '../config/firbase.config.js';
 
-export const uploadImageMiddleware = async (file, quantity) => {
+export const uploadVideoMiddleware = async (file, quantity) => {
     const storageFB = getStorage();
 
     try {
@@ -12,7 +12,7 @@ export const uploadImageMiddleware = async (file, quantity) => {
 
         if (quantity === 'single') {
             const dateTime = Date.now();
-            const fileName = `images/${dateTime}`;
+            const fileName = `video/${dateTime}`;
             const storageRef = ref(storageFB, fileName);
             const metadata = {
                 contentType: file.type,
@@ -34,7 +34,7 @@ export const uploadImageMiddleware = async (file, quantity) => {
         if (quantity === 'multiple') {
             for (let i = 0; i < file.images.length; i++) {
                 const dateTime = Date.now();
-                const fileName = `images/${dateTime}`;
+                const fileName = `video/${dateTime}`;
                 const storageRef = ref(storageFB, fileName);
                 const metadata = {
                     contentType: file.images[i].mimetype,
@@ -49,7 +49,7 @@ export const uploadImageMiddleware = async (file, quantity) => {
             return;
         }
     } catch (error) {
-        console.error("Error uploading image:", error);
+        console.error("Error uploading Video:", error);
         throw error; // Rethrow the error to handle it in the calling function
     }
 };
