@@ -18,6 +18,9 @@ app.use(fileUpload({
     useTempFiles : false
 }));
 
+app.get('/',(req,res)=>{
+res.send("Testing Vercel")
+})
 
 app.use("/api/user",userRouter)
 app.use("/api/consent",consentRouter)
