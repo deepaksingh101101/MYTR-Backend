@@ -10,6 +10,7 @@ export const uploadVideoMiddleware = async (file, quantity) => {
     try {
         await signInWithEmailAndPassword(auth, "deepaksingh101101@gmail.com", "deepak");
 
+      
         if (quantity === 'single') {
             const dateTime = Date.now();
             const fileName = `video/${dateTime}`;
@@ -20,13 +21,12 @@ export const uploadVideoMiddleware = async (file, quantity) => {
 
             // Initiate the upload task
             const uploadTask = uploadBytesResumable(storageRef, file.buffer, metadata);
-
+            
             // Wait for the upload task to complete
             await uploadTask;
 
             // Once the upload is complete, get the download URL
             const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-
             
             return downloadURL;
         }

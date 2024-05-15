@@ -167,7 +167,7 @@ export const uploadImage = async (req, res, next) => {
 export const uploadVideo = async (req, res, next) => {
     const errors = validationResult(req);
 
-    try {
+   
         if (errors.isEmpty()) {
             const file = {
                 type: req.files?.video?.mimetype,
@@ -176,10 +176,12 @@ export const uploadVideo = async (req, res, next) => {
            
 
             try {
-                const buildImage = await uploadVideoMiddleware(file, 'single');
-                res.send({
-                    status: "SUCCESS",
-                    videoUrl: buildImage
+                const buildVideo = await uploadVideoMiddleware(file, 'single');
+                console.log(buildVideo)
+
+               return res.status(200).json({
+                    status: true,
+                    videoUrl: buildVideo
                 });
                 
             } catch (err) {
@@ -189,8 +191,5 @@ export const uploadVideo = async (req, res, next) => {
         } else {
             return res.status(422).json({ status: false, errors: errors.array() });
         }
-    } catch (error) {
-        console.error("Error:", error);
-        return res.status(500).json({ status: false, message: "Internal Server Error" });
-    }
-};
+ 
+}
