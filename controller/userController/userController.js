@@ -61,7 +61,7 @@ export const registerController = async (req, res, next) => {
     }
 
     const { email, password, isSuperAdmin } = req.body;
-
+console.log(email, password, isSuperAdmin)
     const token = req.cookies?.accessToken || (req.header("Authorization")?.replace("Bearer ", ""));
     if (!token) {
       return res.status(400).json({

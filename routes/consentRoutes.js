@@ -10,7 +10,7 @@ const consentRouter=express.Router();
 
 
 
-consentRouter.post('/submitConsent',isLogedIn,consentFormValidate,saveConsentFormData)
+consentRouter.post('/submitConsent',saveConsentFormData)
 consentRouter.get('/getAllConsent',isLogedIn,getAllConsent)
 consentRouter.delete('/consentById',isLogedIn,deleteConsentById)
 consentRouter.get('/consentById',isLogedIn,findConsentById)

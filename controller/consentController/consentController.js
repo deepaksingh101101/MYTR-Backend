@@ -12,10 +12,11 @@ import { uploadVideoMiddleware } from '../../helpers/uploadVideoMiddleware.js';
 
 export const saveConsentFormData = async (req, res, next) => {
     const errors = validationResult(req);
-    const { patientName, gaurdianName, createdBy,caseType, question, signatureUrl, patientId, mobileNo, adharCard,VideoUrl } = req.body;
+    const {address,dob,gender, patientName, gaurdianName, createdBy,caseType, question, signatureUrl, patientId, mobileNo, adharCard,VideoUrl } = req.body;
 
     try {
         if (errors.isEmpty()) {
+
             // Create a new instance of the consent model
             const consentData = new consentModel({
                 patientName,
@@ -28,12 +29,17 @@ export const saveConsentFormData = async (req, res, next) => {
                 mobileNo,
                 adharCard,
                 createdBy,
+                address,
+                dob,
+                gender,
+
             });
+
 
             // Save the consent data to the database
             await consentData.save();
 
-            return res.status(200).json({ status: true, message: "Consent data saved successfully" });
+            return res.status(200).json({ status: true,consentData, message: "Consent data saved successfully" });
         } else {
             return res.status(422).json({ status: false, errors: errors.array() });
         }
@@ -88,7 +94,7 @@ export const findConsentById = async (req, res, next) => {
 export const updateConsentById = async (req, res, next) => {
     const errors = validationResult(req);
     const consentId = req.query.consentId;
-    const { patientName, gaurdianName, updatedBy, caseType, question, signatureUrl, patientId, mobileNo, adharCard, VideoUrl } = req.body;
+    const {address,dob,gender, patientName, gaurdianName, createdBy,caseType, question, signatureUrl, patientId, mobileNo, adharCard,VideoUrl } = req.body;
 
     try {
         if (errors.isEmpty()) {
@@ -102,8 +108,14 @@ export const updateConsentById = async (req, res, next) => {
                 patientId,
                 mobileNo,
                 adharCard,
-                updatedBy,
+                createdBy,
+                address,
+                dob,
+                gender,
+
             }, { new: true });
+
+
 
             if (!consent) {
                 return res.status(404).json({ status: false, message: "No consent data found with this ID" });
@@ -127,14 +139,14 @@ export const uploadImage = async (req, res, next) => {
     try {
         if (errors.isEmpty()) {
             const file = {
-                type: req.files.Image.mimetype,
-                buffer: req.files.Image.data
+                type: req.files?.Image?.mimetype,
+                buffer: req.files?.Image?.data
             };
 
             try {
                 const buildImage = await uploadImageMiddleware(file, 'single');
-                res.send({
-                    status: "SUCCESS",
+                res.status(200).send({
+                    status: true,
                     imageUrl: buildImage
                 });
                 
@@ -158,8 +170,8 @@ export const uploadVideo = async (req, res, next) => {
     try {
         if (errors.isEmpty()) {
             const file = {
-                type: req.files.video.mimetype,
-                buffer: req.files.video.data
+                type: req.files?.video?.mimetype,
+                buffer: req.files?.video?.data
             };
            
 
