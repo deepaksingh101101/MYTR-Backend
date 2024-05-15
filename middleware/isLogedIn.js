@@ -4,6 +4,7 @@ import userModel from '../models/userModel.js'
 export const isLogedIn = async (req, res, next) => {
     try {
       const token = req.cookies?.accessToken || (req.header("Authorization")?.replace("Bearer ", ""));
+      console.log(token)
       if (!token) {
         return res.status(400).json({
           status: "false",
@@ -20,6 +21,7 @@ export const isLogedIn = async (req, res, next) => {
         });
       }
   
+      console.log(decodedToken)
 
       const user = await userModel.findOne({ _id: decodedToken.payload }).select("-password -refreshToken");
   

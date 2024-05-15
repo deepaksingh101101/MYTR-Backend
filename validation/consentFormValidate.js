@@ -7,7 +7,7 @@ export const consentFormValidate = [
   body('question', 'Question Should not be empty').notEmpty(),
   body('signatureUrl', 'Signature Url is required').notEmpty(),
   body('VideoUrl', 'Video Url is required').notEmpty(),
-  body('createdBy', 'Created By is Required').notEmpty(),
+  body('createdBy', 'Should be and email').isEmail(),
   body('patientId', 'Patient Id By is Required').notEmpty(),
   body('address', 'Address is Required').notEmpty(),
   body('dob', 'DOB is Required').notEmpty(),
