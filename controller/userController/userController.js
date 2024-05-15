@@ -219,9 +219,8 @@ export const sendOtp = async (req, res, next) => {
   try {
     if (errors.isEmpty()) {
       const isUserExist = await userModel.findOne({ email });
-
-      if (!isUserExist) {
-        return res.status(200).json({
+      if (isUserExist===null) {
+        return res.status(400).json({
           status: false,
           message: "User does not exist with this email"
         });
@@ -265,17 +264,17 @@ export const sendOtp = async (req, res, next) => {
         from: 'deepaksingh104104@gmail.com', // Sender email address
         to: email, // Recipient email address from the request body
         subject: 'Verify Your HMS OTP', // Email subject
-        text: `Hii, ${otp} is your OTP to reset Your HMS Password ` // Email body
+        text: `Hii, ${otp} is your OTP to reset Your MYTR Password ` // Email body
       };
 
       // Send email
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
           console.log("Error:", error);
-          return res.status(500).json({ message: "Failed to send email" });
+          return res.status(500).json({status:false, message: "Failed to send email" });
         } else {
           console.log('Email sent: ' + info.response);
-          return res.status(200).json({ message: "Email sent successfully" });
+          return res.status(200).json({status:true, message: "Email sent successfully" });
         }
       });
     } else {
@@ -332,6 +331,9 @@ export const resetPasswordAfterVerification = async (req, res, next) => {
   try {
     if (errors.isEmpty()) {
 
+      
+
+
       const isVerified=await otpModel.findOne({email})
 
       if(isVerified?.isVerified===true){
@@ -340,8 +342,22 @@ export const resetPasswordAfterVerification = async (req, res, next) => {
         const isUserExist = await userModel.findOneAndUpdate({email},{password:hashedPassword})
         
         if(isUserExist){
+          const isExist = await otpModel.findOne({ email });
+
+      if (isExist) {
+      
+          // Delete the entry from the OTP model
+          await otpModel.findOneAndDelete({ email });
+      
+      } else {
+        console.log("Entry does not exist.");
+      }
           return res.status(200).json({status:"true",message:"Password Reset SuccessFully"})
         }
+
+
+        
+
       }else{
         return res.status(400).json({status:"false",message:"Otp not verified yet"})
 
