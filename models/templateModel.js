@@ -20,6 +20,12 @@ const templateModelSchema = new mongoose.Schema({
     },
     updatedBy: {
         type: String,
+    },
+    html:{
+        type:String
+    },
+    deltaForm:{
+        type:Object
     }
 }, {
     timestamps: true

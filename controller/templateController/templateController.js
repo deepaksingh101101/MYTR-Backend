@@ -5,9 +5,9 @@ import templateModel from '../../models/templateModel.js';
 
 export const saveTemplateFormData = async (req, res, next) => {
     const errors = validationResult(req);
-    const { caseType, questions, createdBy } = req.body;
+    const { caseType, questions, createdBy,html,deltaForm } = req.body;
 
-    console.log(caseType, questions, createdBy)
+
     let isCaseTypeExist=await templateModel.find({caseType})
     console.log(isCaseTypeExist)
     if(isCaseTypeExist.length>=1){
@@ -20,7 +20,9 @@ export const saveTemplateFormData = async (req, res, next) => {
             const template = await templateModel.create({
                 caseType,
                 questions,
-                createdBy
+                createdBy,
+                html,
+                deltaForm
             });
 
 

@@ -145,6 +145,7 @@ export const uploadImage = async (req, res, next) => {
 
             try {
                 const buildImage = await uploadImageMiddleware(file, 'single');
+                console.log(buildImage)
                 res.status(200).send({
                     status: true,
                     imageUrl: buildImage
