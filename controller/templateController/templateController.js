@@ -62,11 +62,11 @@ export const editTemplateById = async (req, res, next) => {
 
         const  templateId  = req.query.templateId;
       
-        const { caseType, questions, updatedBy } = req.body;
+        let { caseType, questions, updatedBy,html,deltaForm } = req.body;
         caseType = caseType.toLowerCase();
 
         // Find the template by ID and update it
-        const updatedTemplate = await templateModel.findByIdAndUpdate(templateId, { caseType, questions, updatedBy }, { new: true });
+        const updatedTemplate = await templateModel.findByIdAndUpdate({_id:templateId}, { caseType, questions, updatedBy,html,deltaForm }, { new: true });
 
         if (!updatedTemplate) {
             return res.status(404).json({ status: false, message: "Template not found" });
