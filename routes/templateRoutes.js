@@ -1,5 +1,5 @@
 import express from "express"
-import { deleteTemplateById, editTemplateById, getAllCaseType, getAllTemplate, getQuestionByCaseType, getTemplateById, saveTemplateFormData } from "../controller/templateController/templateController.js";
+import { deleteTemplateById, editTemplateById, getAllCaseType, getAllTemplate, getQuestionByCaseType, getTemplateByCaseType, getTemplateById, saveTemplateFormData } from "../controller/templateController/templateController.js";
 import { isLogedIn } from "../middleware/isLogedIn.js";
 import { templateCreateDataValidate, templateEditDataValidate } from "../validation/templateDataValidate.js";
 import { isSuperAdmin } from "../middleware/isSuperAdmin.js";
@@ -17,6 +17,7 @@ templateRouter.delete('/deleteTemplate',isLogedIn,isSuperAdmin,deleteTemplateByI
 templateRouter.get('/templateId',isLogedIn, getTemplateById);
 templateRouter.get('/questionsByCaseType',isLogedIn, getQuestionByCaseType);
 templateRouter.get('/getAllCaseType', getAllCaseType);
+templateRouter.get('/getTemplateByCaseType', getTemplateByCaseType);
 
 
 

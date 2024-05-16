@@ -141,9 +141,47 @@ export const getQuestionByCaseType = async (req, res, next) => {
 
 
 
-export const getAllCaseType = async (req, res, next) => {
+// export const getAllCaseType = async (req, res, next) => {
   
-    res.status(200).json({status:true,caseType:["cancer","fever","cough","legal"]})
+//     res.status(200).json({status:true,caseType:["cancer","fever","cough","legal"]})
+// };
+
+
+
+export const getAllCaseType = async (req, res, next) => {
+    try {
+      const templates = await templateModel.find({}, { caseType: 1, _id: 0 }); // Retrieve only the caseType field
+  
+      const caseTypes = templates.map(template => template.caseType); // Extract caseType from each document
+  
+      res.status(200).json({ status: true, caseType: caseTypes }); // Send the response in the desired format
+    } catch (error) {
+      console.error("Error fetching case types:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  };
+  
+  
+  export const getTemplateByCaseType = async (req, res, next) => {
+    try {
+        let caseType = req.query.caseType.toLowerCase();
+        
+        // Query the database for the document with the matching caseType
+        const template = await templateModel.findOne({ caseType: caseType });
+        
+        if (!template) {
+            return res.status(404).json({ error: "Template not found" });
+        }
+        
+        // Extract the deltaForm from the template document
+        const deltaForm = template.deltaForm; // Replace "deltaForm" with the actual field name in your document
+        
+        // Return the deltaForm as a response
+        res.status(200).json({ deltaForm });
+    } catch (error) {
+        console.error("Error fetching template:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
 };
 
 
