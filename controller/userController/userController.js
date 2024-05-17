@@ -42,7 +42,7 @@ export const loginController = async (req, res, next) => {
           res.cookie('accessToken', accessToken, { httpOnly: true, sameSite: 'None', secure: process.env.NODE_ENV === 'production' });
 
           // Return user details and tokens
-          return res.status(201).json({ status: true, user: { _id: isUserExist._id, email: isUserExist.email }, accessToken, refreshToken });
+          return res.status(201).json({ status: true, user: { _id: isUserExist._id, email: isUserExist.email, isSuperAdmin:isUserExist?.isSuperAdmin }, accessToken, refreshToken });
       } catch (error) {
           console.error("Login error:", error);
           return res.status(500).json({ status: false, message: "Internal server error" });
