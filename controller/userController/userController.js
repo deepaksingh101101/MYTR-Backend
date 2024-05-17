@@ -42,7 +42,7 @@ export const loginController = async (req, res, next) => {
           res.cookie('accessToken', accessToken, { httpOnly: true, sameSite: 'None', secure: process.env.NODE_ENV === 'production' });
 
           // Return user details and tokens
-          return res.status(201).json({ status: true, user: { _id: isUserExist._id, email: isUserExist.email }, accessToken, refreshToken });
+          return res.status(201).json({ status: true, user: { _id: isUserExist._id, email: isUserExist.email, isSuperAdmin:isUserExist?.isSuperAdmin }, accessToken, refreshToken });
       } catch (error) {
           console.error("Login error:", error);
           return res.status(500).json({ status: false, message: "Internal server error" });
@@ -94,7 +94,7 @@ console.log(email, password, isSuperAdmin)
       return res.status(400).json({ status: false, message: "Logged user does not exist" });
     }
 
-    if (!isLoggedInUserExist.isSuperAdmin) {
+    if (!isLoggedInUserExist?.isSuperAdmin) {
       return res.status(400).json({ status: false, message: "You are not a super Admin" });
     }
 
@@ -184,7 +184,7 @@ export const accessTokenFromRefresh = async (req, res, next) => {
 
 export const getAllUsers = async (req, res, next) => {
   try {
-    const allUsers = await userModel.find({}, { password: 0, refreshToken: 0 }); // Excluding password and refreshToken fields
+    const allUsers = await userModel.find({}, { password: 0, refreshToken: 0 ,_id:0}); // Excluding password and refreshToken fields
     if (allUsers.length <= 0) {
       return res.status(200).json({ message: "No Users Found" });
     }
@@ -382,10 +382,15 @@ export const deleteUser = async (req, res, next) => {
 
   const { LoggedEmail, userToRemove } = req.body;
 
-  try {
-      const isSuper = isSuperAdmin(LoggedEmail);
 
-      if (!isSuper) {
+
+  try {
+
+
+
+      const isSuper = await userModel.findOne({email:LoggedEmail})
+
+      if (!isSuper?.isSuperAdmin) {
           return res.status(400).json({ status: false, message: "You are not a super Admin" });
       }
 
