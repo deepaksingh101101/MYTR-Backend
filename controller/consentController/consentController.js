@@ -94,7 +94,7 @@ export const findConsentById = async (req, res, next) => {
 export const updateConsentById = async (req, res, next) => {
     const errors = validationResult(req);
     const consentId = req.query.consentId;
-    const {address,dob,gender, patientName, gaurdianName, createdBy,caseType, question, signatureUrl, patientId, mobileNo, adharCard,VideoUrl } = req.body;
+    const {updatedBy,address,dob,gender, patientName, gaurdianName,caseType, question, signatureUrl, patientId, mobileNo, adharCard,VideoUrl } = req.body;
 
     try {
         if (errors.isEmpty()) {
@@ -108,10 +108,10 @@ export const updateConsentById = async (req, res, next) => {
                 patientId,
                 mobileNo,
                 adharCard,
-                createdBy,
                 address,
                 dob,
                 gender,
+                updatedBy
 
             }, { new: true });
 
