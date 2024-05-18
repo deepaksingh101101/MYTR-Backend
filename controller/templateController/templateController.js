@@ -121,7 +121,7 @@ export const getTemplateById = async (req, res, next) => {
 
 export const getQuestionByCaseType = async (req, res, next) => {
     try {
-        let caseType = req.query.caseType.toLowerCase(); // Convert to lowercase
+        let caseType = req.query.caseType; // Convert to lowercase
 
         const template = await templateModel.findOne({ caseType }); // Using findOne to get only one template
 
@@ -164,7 +164,7 @@ export const getAllCaseType = async (req, res, next) => {
   
   export const getTemplateByCaseType = async (req, res, next) => {
     try {
-        let caseType = req.query.caseType.toLowerCase();
+        let caseType = req.query.caseType;
         
         // Query the database for the document with the matching caseType
         const template = await templateModel.findOne({ caseType: caseType });
