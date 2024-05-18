@@ -121,10 +121,13 @@ export const getTemplateById = async (req, res, next) => {
 
 export const getQuestionByCaseType = async (req, res, next) => {
     try {
-        let caseType = req.query.caseType; // Convert to lowercase
+        let caseType = req.query.caseType; 
+console.log(caseType)
+        // const template = await templateModel.findOne({ caseType }); // Using findOne to get only one template
+        const template = await templateModel.findOne({ caseType: { $regex: new RegExp(`^${caseType}$`, 'i') } });
 
-        const template = await templateModel.findOne({ caseType }); // Using findOne to get only one template
-
+console.log(template)
+        
         if (!template) {
             return res.status(200).json({ status: true, questions:template });
         }
@@ -167,7 +170,9 @@ export const getAllCaseType = async (req, res, next) => {
         let caseType = req.query.caseType;
         
         // Query the database for the document with the matching caseType
-        const template = await templateModel.findOne({ caseType: caseType });
+        // const template = await templateModel.findOne({ caseType: caseType });
+        const template = await templateModel.findOne({ caseType: { $regex: new RegExp(`^${caseType}$`, 'i') } });
+
         
         if (!template) {
             return res.status(404).json({ error: "Template not found" });
