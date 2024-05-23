@@ -13,6 +13,7 @@ export const consentFormValidate = [
   body('dob', 'DOB is Required').notEmpty(),
   body('mobileNo',"Mobile number is required").notEmpty(),
   body('adharCard',"Aadhar number is required").notEmpty(),
+  body('relation',"Relation with  patient is required").notEmpty(),
 ]
 
 
@@ -21,12 +22,12 @@ export const consentUpdateFormValidate = [
   body('gaurdianName', 'Gaurdian Name is Required').notEmpty(),
   body('caseType', 'Case Type is Required').notEmpty(),
   body('question', 'Question Should not be empty').notEmpty(),
-  body('signatureUrl', 'Signature Url is required').notEmpty(),
-  body('VideoUrl', 'Video Url is required').notEmpty(),
   body('updatedBy', 'Updated By is Required').notEmpty(),
   body('patientId', 'Patient Id By is Required').notEmpty(),
   body('address', 'Address is Required').notEmpty(),
   body('dob', 'DOB is Required').notEmpty(),
   body('mobileNo',"Mobile number is required").notEmpty(),
   body('adharCard',"Aadhar number is required").notEmpty(),
+  body('relation',"Relation with  patient is required").notEmpty(),
+
 ]
