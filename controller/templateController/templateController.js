@@ -5,7 +5,7 @@ import templateModel from '../../models/templateModel.js';
 
 export const saveTemplateFormData = async (req, res, next) => {
     const errors = validationResult(req);
-    const { caseType, questions, createdBy,html,deltaForm } = req.body;
+    const { caseType, questions, faqs, createdBy,html,deltaForm } = req.body;
 
 
     let isCaseTypeExist=await templateModel.find({caseType})
@@ -20,6 +20,7 @@ export const saveTemplateFormData = async (req, res, next) => {
             const template = await templateModel.create({
                 caseType,
                 questions,
+                faqs,
                 createdBy,
                 html,
                 deltaForm
@@ -62,7 +63,7 @@ export const editTemplateById = async (req, res, next) => {
 
         const  templateId  = req.query.templateId;
       
-        let { caseType, questions, updatedBy,html,deltaForm } = req.body;
+        let { caseType, questions,faqs,updatedBy,html,deltaForm } = req.body;
         caseType = caseType.toLowerCase();
 
         // Find the template by ID and update it
@@ -190,4 +191,21 @@ export const getAllCaseType = async (req, res, next) => {
 };
 
 
+// Function to get FAQs by case type
 
+export const getFaqsByCaseType = async (req, res, next) => {
+    const caseType = req.query.caseType;
+
+    try {
+        const template = await templateModel.findOne({ caseType });
+
+        if (!template) {
+            return res.status(404).json({ status: false, message: "Case type not found" });
+        }
+
+        return res.status(200).json({ status: true, faqs: template.faqs });
+    } catch (error) {
+        console.error("Error:", error);
+        return res.status(500).json({ status: false, message: "Internal Server Error" });
+    }
+};
