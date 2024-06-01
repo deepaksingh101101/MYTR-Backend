@@ -131,37 +131,36 @@ export const updateConsentById = async (req, res, next) => {
 };
 
 
-
 export const uploadImage = async (req, res, next) => {
     const errors = validationResult(req);
-
+  
     try {
-        if (errors.isEmpty()) {
-            const file = {
-                type: req.files?.Image?.mimetype,
-                buffer: req.files?.Image?.data
-            };
-
-            try {
-                const buildImage = await uploadImageMiddleware(file, 'single');
-                console.log(buildImage)
-                res.status(200).send({
-                    status: true,
-                    imageUrl: buildImage
-                });
-                
-            } catch (err) {
-                console.log(err);
-                return res.status(500).json({ status: false, message: "Error uploading image" });
-            }
-        } else {
-            return res.status(422).json({ status: false, errors: errors.array() });
+      if (errors.isEmpty()) {
+        const files = req.files;
+  
+        if (!files || files.length === 0) {
+          return res.status(400).json({ status: false, message: "No files uploaded" });
         }
+  
+        try {
+          const imageUrls = await uploadImageMiddleware(files, 'multiple');
+          console.log(imageUrls);
+          res.status(200).send({
+            status: true,
+            imageUrls
+          });
+        } catch (err) {
+          console.log(err);
+          return res.status(500).json({ status: false, message: "Error uploading images" });
+        }
+      } else {
+        return res.status(422).json({ status: false, errors: errors.array() });
+      }
     } catch (error) {
-        console.error("Error:", error);
-        return res.status(500).json({ status: false, message: "Internal Server Error" });
+      console.error("Error:", error);
+      return res.status(500).json({ status: false, message: "Internal Server Error" });
     }
-};
+  };
 
 
 export const uploadVideo = async (req, res, next) => {

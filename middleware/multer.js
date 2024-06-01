@@ -5,19 +5,19 @@ import  fs from "fs"
 
 export const uploadMultiple = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 1000000 },
+  limits: { fileSize: 5000000 },
   fileFilter: function (req, file, cb) {
     checkFileType(file, cb);
   }
-}).array("image", 12);
+}).array("images", 12);
 
-export const upload = multer({
+export const uploadSingle = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 1000000 },
+  limits: { fileSize: 5000000 },
   fileFilter: async function (req, file, cb) {
   checkFileType(file, cb);
   }
-}).single("image");
+}).single("images");
 
 // // Check file Type
 function checkFileType(file, cb) {
