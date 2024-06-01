@@ -4,8 +4,9 @@ import { getDownloadURL, getStorage, ref ,uploadBytesResumable } from 'firebase/
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth"
 import { auth } from '../config/firbase.config.js';
 
-export const uploadImageMiddleware = async (file, quantity) => {
+export const uploadImageMiddleware = async (files, quantity) => {
     const storageFB = getStorage();
+    const urls=[];
 
     try {
         await signInWithEmailAndPassword(auth, "deepaksingh101101@gmail.com", "deepak");
@@ -15,38 +16,36 @@ export const uploadImageMiddleware = async (file, quantity) => {
             const fileName = `images/${dateTime}`;
             const storageRef = ref(storageFB, fileName);
             const metadata = {
-                contentType: file.type,
+                contentType: files.type,
             };
 
             // Initiate the upload task
-            const uploadTask = uploadBytesResumable(storageRef, file.buffer, metadata);
+            const uploadTask = uploadBytesResumable(storageRef, files.buffer, metadata);
 
             // Wait for the upload task to complete
             await uploadTask;
 
             // Once the upload is complete, get the download URL
             const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-
-            
-            return downloadURL;
+            urls.push(downloadURL);
         }
 
-        if (quantity === 'multiple') {
-            for (let i = 0; i < file.images.length; i++) {
+        else if (quantity === 'multiple') {
+            for (let i = 0; i < files.length; i++) {
                 const dateTime = Date.now();
-                const fileName = `images/${dateTime}`;
+                const fileName = `images/${dateTime}_${files[i].originalname}`;
                 const storageRef = ref(storageFB, fileName);
                 const metadata = {
-                    contentType: file.images[i].mimetype,
+                    contentType: files[i].mimetype,
                 };
 
-                const saveImage = await Image.create({ imageUrl: fileName });
-                file.item.imageId.push({ _id: saveImage._id });
-                await file.item.save();
-
-                await uploadBytesResumable(storageRef, file.images[i].buffer, metadata);
+                const uploadTask = uploadBytesResumable(storageRef, files[i].buffer, metadata);
+                await uploadTask;
+        
+                const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                urls.push(downloadURL);
             }
-            return;
+            return urls;
         }
     } catch (error) {
         console.error("Error uploading image:", error);

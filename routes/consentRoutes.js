@@ -1,6 +1,6 @@
 import express from "express"
 import { isLogedIn } from "../middleware/isLogedIn.js";
-import { upload } from "../middleware/multer.js";
+import { uploadMultiple } from "../middleware/multer.js";
 import { deleteConsentById, findConsentById, getAllConsent, saveConsentFormData, updateConsentById, uploadImage, uploadVideo } from "../controller/consentController/consentController.js";
 import { consentFormValidate, consentUpdateFormValidate } from "../validation/consentFormValidate.js";
 
@@ -19,8 +19,8 @@ consentRouter.patch('/consentById',isLogedIn,consentUpdateFormValidate,updateCon
 
 
 
-consentRouter.post('/uploadImage',uploadImage)
-consentRouter.post('/uploadVideo',uploadVideo)
+consentRouter.post('/uploadImage',isLogedIn,uploadMultiple,uploadImage)
+consentRouter.post('/uploadVideo',isLogedIn,uploadVideo)
 
 
 
