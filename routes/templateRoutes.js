@@ -1,5 +1,5 @@
 import express from "express"
-import { deleteTemplateById, editTemplateById, getAllCaseType, getAllTemplate, getQuestionByCaseType, getTemplateByCaseType, getTemplateById, saveTemplateFormData,addFaqToCaseType,getFaqsByCaseType } from "../controller/templateController/templateController.js";
+import { deleteTemplateById, editTemplateById, getAllCaseType, getAllTemplate, getQuestionByCaseType, getTemplateByCaseType, getTemplateById, saveTemplateFormData,getFaqsByCaseType } from "../controller/templateController/templateController.js";
 import { isLogedIn } from "../middleware/isLogedIn.js";
 import { templateCreateDataValidate, templateEditDataValidate,faqDataValidate } from "../validation/templateDataValidate.js";
 // import { faqDataValidate } from "../validation/faqDataValidate.js";
@@ -19,7 +19,6 @@ templateRouter.get('/templateId',isLogedIn, getTemplateById);
 templateRouter.get('/questionsByCaseType',isLogedIn, getQuestionByCaseType);
 templateRouter.get('/getAllCaseType', getAllCaseType);
 templateRouter.get('/getTemplateByCaseType', getTemplateByCaseType);
-templateRouter.post('/add-faq', faqDataValidate , addFaqToCaseType);
 templateRouter.get('/faqs', getFaqsByCaseType);
 
 
