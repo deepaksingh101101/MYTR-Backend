@@ -5,7 +5,7 @@ import templateModel from '../../models/templateModel.js';
 
 export const saveTemplateFormData = async (req, res, next) => {
     const errors = validationResult(req);
-    const { caseType, questions, faqs, createdBy,html,deltaForm } = req.body;
+    const { caseType,imageUrl, questions, faqs,customFields,videoUrl, createdBy,html,deltaForm } = req.body;
 
 
     let isCaseTypeExist=await templateModel.find({caseType})
@@ -19,8 +19,11 @@ export const saveTemplateFormData = async (req, res, next) => {
             // Create a new instance of the consent model
             const template = await templateModel.create({
                 caseType,
+                imageUrl,
                 questions,
                 faqs,
+                customFields,
+                videoUrl,
                 createdBy,
                 html,
                 deltaForm
@@ -63,11 +66,11 @@ export const editTemplateById = async (req, res, next) => {
 
         const  templateId  = req.query.templateId;
       
-        let { caseType, questions,faqs,updatedBy,html,deltaForm } = req.body;
+        let { caseType,imageUrl, questions,faqs,customFields,videoUrl,updatedBy,html,deltaForm } = req.body;
         caseType = caseType.toLowerCase();
 
         // Find the template by ID and update it
-        const updatedTemplate = await templateModel.findByIdAndUpdate({_id:templateId}, { caseType, questions, updatedBy,html,deltaForm }, { new: true });
+        const updatedTemplate = await templateModel.findByIdAndUpdate({_id:templateId}, { caseType,imageUrl,questions,faqs,customFields,videoUrl,updatedBy,html,deltaForm }, { new: true });
 
         if (!updatedTemplate) {
             return res.status(404).json({ status: false, message: "Template not found" });

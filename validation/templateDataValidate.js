@@ -13,6 +13,11 @@ export const templateCreateDataValidate = [
   body('questions.*.text', 'Question text should not be empty').notEmpty(),
   body('faqs', 'FAQs should be an array').isArray(),
   ...faqDataValidate,
+  body('customFields.*.fieldName', 'Custom field name is required').optional().notEmpty(),
+  body('customFields.*.options.*.name', 'Option name is required').optional().notEmpty(),
+  body('customFields.*.options.*.description', 'Option description is required').optional().notEmpty(),
+  body('customFields.*.options.*.imageUrl', 'Option image URL is required').optional().notEmpty(),
+  body('customFields.*.options.*.videoUrl', 'Option video URL is required').optional().notEmpty(),
   body('createdBy', 'Created By is Required').notEmpty().isString().withMessage('Created By should be a string'),
 ];
 
@@ -22,6 +27,11 @@ export const templateEditDataValidate = [
     body('questions.*.text', 'Question text should not be empty').notEmpty(),
     body('faqs', 'FAQs should be an array').isArray(),
     ...faqDataValidate,
+    body('customFields.*.fieldName', 'Custom field name is required').optional().notEmpty(),
+    body('customFields.*.options.*.name', 'Option name is required').optional().notEmpty(),
+    body('customFields.*.options.*.description', 'Option description is required').optional().notEmpty(),
+    body('customFields.*.options.*.imageUrl', 'Option image URL is required').optional().notEmpty(),
+    body('customFields.*.options.*.videoUrl', 'Option video URL is required').optional().notEmpty(),
     body('updatedBy', 'Updated By is Required').notEmpty().isString().withMessage('Updated By should be a string'),
   ];
 
