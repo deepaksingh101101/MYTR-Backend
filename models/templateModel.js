@@ -18,22 +18,53 @@ const faqSchema= new mongoose.Schema({
         type:String,
         required:true
     },
-    imageUrl:{
-        type:String,
-    },
+
+    imageUrl:[String],
+
     videoUrl:{
         type:String,
         required:true
     }
 })
+
+const optionSchema= new mongoose.Schema({
+    name:{
+        type:String,
+        required:true,
+    },
+    description:{
+        type:String,
+        required:true
+    },
+    imageUrl:[String],
+    videoUrl:{
+        type:String,
+    }
+});
+
+const customFieldSchema= new mongoose.Schema({
+    fieldName:{
+        type:String,
+        required:true,
+    },
+    options:[optionSchema]
+})
 // Schema for the main template
 const templateModelSchema = new mongoose.Schema({
+
     caseType: {
         type: String,
         required: true
     },
+
+    imageUrl:[String],
     questions: [questionSchema], // Array of questions referencing the question schema
     faqs:[faqSchema],//array of faqs referencing the faq schema
+    customFields:[customFieldSchema],//array of custom fields referencing to the customfieldSchema
+    videoUrl:{
+        type:String,
+        required:true,
+    },
     createdBy: {
         type: String,
     },
