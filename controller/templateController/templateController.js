@@ -183,10 +183,10 @@ export const getAllCaseType = async (req, res, next) => {
         }
         
         // Extract the deltaForm from the template document
-        const {deltaForm,faqs,customFields} = template // Replace "deltaForm" with the actual field name in your document
+        const {deltaForm,faqs,customFields,imageUrl,videoUrl} = template // Replace "deltaForm" with the actual field name in your document
     
         // Return the deltaForm as a response
-        res.status(200).json({ deltaForm,faqs,customFields});
+        res.status(200).json({ deltaForm,faqs,customFields,imageUrl,videoUrl});
     } catch (error) {
         console.error("Error fetching template:", error);
         res.status(500).json({ error: "Internal server error" });
