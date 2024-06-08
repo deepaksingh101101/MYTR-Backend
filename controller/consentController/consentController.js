@@ -12,7 +12,7 @@ import { uploadVideoMiddleware } from '../../helpers/uploadVideoMiddleware.js';
 
 export const saveConsentFormData = async (req, res, next) => {
     const errors = validationResult(req);
-    const {address,dob,gender, patientName, gaurdianName, createdBy,caseType, question, signatureUrl, patientId, mobileNo, adharCard,VideoUrl,relation } = req.body;
+    const {address,dob,gender, patientName, gaurdianName, createdBy,caseType, question, signatureUrl, patientId, mobileNo, adharCard,VideoUrl,relation, customFields } = req.body;
 
     try {
         if (errors.isEmpty()) {
@@ -32,7 +32,8 @@ export const saveConsentFormData = async (req, res, next) => {
                 address,
                 dob,
                 gender,
-                relation
+                relation,
+                customFields
             });
 
 
@@ -94,7 +95,7 @@ export const findConsentById = async (req, res, next) => {
 export const updateConsentById = async (req, res, next) => {
     const errors = validationResult(req);
     const consentId = req.query.consentId;
-    const {updatedBy,address,dob,gender, patientName, gaurdianName,caseType, question, signatureUrl, patientId, mobileNo, adharCard,VideoUrl,relation } = req.body;
+    const {updatedBy,address,dob,gender, patientName, gaurdianName,caseType, question, signatureUrl, patientId, mobileNo, adharCard,VideoUrl,relation,customFields } = req.body;
 
     try {
         if (errors.isEmpty()) {
@@ -110,7 +111,8 @@ export const updateConsentById = async (req, res, next) => {
                 dob,
                 gender,
                 updatedBy,
-                relation
+                relation,
+                customFields
 
             }, { new: true });
 

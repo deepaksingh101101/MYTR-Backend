@@ -183,16 +183,40 @@ export const getAllCaseType = async (req, res, next) => {
         }
         
         // Extract the deltaForm from the template document
-        const deltaForm = template.deltaForm; // Replace "deltaForm" with the actual field name in your document
-        
+        const {deltaForm,faqs,customFields} = template // Replace "deltaForm" with the actual field name in your document
+    
         // Return the deltaForm as a response
-        res.status(200).json({ deltaForm });
+        res.status(200).json({ deltaForm,faqs,customFields});
     } catch (error) {
         console.error("Error fetching template:", error);
         res.status(500).json({ error: "Internal server error" });
     }
-};
+}
+// function to get custom fields options by case types
 
+export const getOptionsByCustomField = async(req,res,next) =>{
+    try{
+    const{caseType,fieldName} = req.query
+
+    const template = await templateModel.findOne({ caseType: { $regex: new RegExp(`^${caseType}$`, 'i') } })
+
+    if(!template){
+        return res.status(404).json({status:false,message:"Template not found"})
+    }
+
+    const customField = template.customFields.find(field => field.fieldName === fieldName);
+
+    if (!customField) {
+        return res.status(404).json({ status: false, message: "Custom field not found" });
+    }
+
+    res.status(200).json({ status: true, options: customField.options });
+
+}catch(error){
+    console.error("Error fetching custom field options:", error);
+    res.status(500).json({ status: false, message: "Internal server error" });
+}
+}
 
 // Function to get FAQs by case type
 

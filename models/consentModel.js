@@ -59,7 +59,27 @@ const consentModelSchema=new mongoose.Schema({
     relation:{
         type:String,
         required:true,
-    }
+    },
+    customFields:[{
+        fieldName:{
+            type:String,
+            required:true
+        },
+        selectedOption:{
+            name:{
+                type:String,
+                required:true
+            },
+            description:{
+                type:String,
+                required:true
+            },
+            imageUrls:[String],
+            videoUrl:{
+                type:String,
+            }
+        }
+    }]
 },{
     timestamps:true
 })
