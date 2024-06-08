@@ -17,7 +17,7 @@ templateRouter.post('/updateTemplate',isLogedIn,isSuperAdmin,templateEditDataVal
 templateRouter.delete('/deleteTemplate',isLogedIn,isSuperAdmin,deleteTemplateById)
 templateRouter.get('/templateId',isLogedIn, getTemplateById);
 templateRouter.get('/questionsByCaseType',isLogedIn, getQuestionByCaseType);
-templateRouter.get('/getOptions ',isLogedIn,getOptionsByCustomField );
+templateRouter.get('/getOptions',isLogedIn,getOptionsByCustomField );
 
 templateRouter.get('/getAllCaseType', getAllCaseType);
 templateRouter.get('/getTemplateByCaseType', getTemplateByCaseType);

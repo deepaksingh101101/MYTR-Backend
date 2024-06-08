@@ -125,7 +125,7 @@ export const getTemplateById = async (req, res, next) => {
 
 export const getQuestionByCaseType = async (req, res, next) => {
     try {
-        let caseType = req.query.caseType; 
+        let caseType = req.query.caseType.toLowerCase(); 
 console.log(caseType)
         // const template = await templateModel.findOne({ caseType }); // Using findOne to get only one template
         const template = await templateModel.findOne({ caseType: { $regex: new RegExp(`^${caseType}$`, 'i') } });
@@ -171,7 +171,7 @@ export const getAllCaseType = async (req, res, next) => {
   
   export const getTemplateByCaseType = async (req, res, next) => {
     try {
-        let caseType = req.query.caseType;
+        let caseType = req.query.caseType.toLowerCase();
         
         // Query the database for the document with the matching caseType
         // const template = await templateModel.findOne({ caseType: caseType });
@@ -196,22 +196,28 @@ export const getAllCaseType = async (req, res, next) => {
 
 export const getOptionsByCustomField = async(req,res,next) =>{
     try{
-    const{caseType,fieldName} = req.query
+    const{caseType,fieldName,optionName} = req.query
 
-    const template = await templateModel.findOne({ caseType: { $regex: new RegExp(`^${caseType}$`, 'i') } })
+    const template = await templateModel.findOne({ caseType: { $regex: new RegExp(`^${caseType.toLowerCase()}$`, 'i') } })
 
     if(!template){
         return res.status(404).json({status:false,message:"Template not found"})
     }
 
-    const customField = template.customFields.find(field => field.fieldName === fieldName);
+    const customField = template.customFields.find(field => field.fieldName.toLowerCase() === fieldName.toLowerCase());
 
     if (!customField) {
         return res.status(404).json({ status: false, message: "Custom field not found" });
     }
 
-    res.status(200).json({ status: true, options: customField.options });
+    const options = customField.options.find(opt=>opt.name.toLowerCase() === optionName.toLowerCase())
 
+    if (!options){
+        return res.status(404).json({status:false,message:"Option not found"})
+    }
+
+    const {description,imageUrls,videoUrl}= options;
+    res.status(200).json({ status: true, description,imageUrls,videoUrl})
 }catch(error){
     console.error("Error fetching custom field options:", error);
     res.status(500).json({ status: false, message: "Internal server error" });
