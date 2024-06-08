@@ -65,21 +65,23 @@ const consentModelSchema=new mongoose.Schema({
             type:String,
             required:true
         },
-        selectedOption:{
-            name:{
-                type:String,
-                required:true
-            },
-            description:{
-                type:String,
-                required:true
-            },
-            imageUrls:[String],
-            videoUrl:{
-                type:String,
+        option:{
+            // name:{
+            //     type:String,
+            //     required:true
+            // },
+            // description:{
+            //     type:String,
+            //     required:true
+            // },
+            // imageUrls:[String],
+            // videoUrl:{
+            //     type:String,
+            type:String,
+            required:true
             }
         }
-    }]
+    ]
 },{
     timestamps:true
 })
