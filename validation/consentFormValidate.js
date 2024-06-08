@@ -14,6 +14,7 @@ export const consentFormValidate = [
   body('mobileNo',"Mobile number is required").notEmpty(),
   body('adharCard',"Aadhar number is required").notEmpty(),
   body('relation',"Relation with  patient is required").notEmpty(),
+  body('customFields',"Custom Fields are required").notEmpty(),
 ]
 
 
@@ -29,5 +30,5 @@ export const consentUpdateFormValidate = [
   body('mobileNo',"Mobile number is required").notEmpty(),
   body('adharCard',"Aadhar number is required").notEmpty(),
   body('relation',"Relation with  patient is required").notEmpty(),
-
+  body('customFields',"Custom Fields are required").notEmpty(),
 ]
