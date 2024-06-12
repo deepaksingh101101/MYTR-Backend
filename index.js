@@ -21,9 +21,9 @@ app.get('/',(req,res)=>{
     res.send("Testing Vercel")
     })
 
-// app.use(fileUpload({
-//     useTempFiles : false
-// }));
+app.use(fileUpload({
+    useTempFiles : false
+}));
 
 
 
