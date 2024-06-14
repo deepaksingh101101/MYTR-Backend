@@ -31,8 +31,8 @@ export const loginController = async (req, res, next) => {
               return res.status(401).json({ status: false, message: "Invalid email or password" });
           }
 
-          const accessToken = Jwt.sign({ payload: isUserExist?._id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '2d' });
-          const refreshToken = Jwt.sign({ payload: isUserExist?._id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
+          const accessToken = Jwt.sign({ payload: isUserExist?._id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '365d' });
+          const refreshToken = Jwt.sign({ payload: isUserExist?._id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '365d' });
 
           // Set the refresh token in Redis or another secure data store
           // Example: await redisClient.set(refreshToken, user._id, 'EX', 7 * 24 * 60 * 60); // Set expiry to 7 days
