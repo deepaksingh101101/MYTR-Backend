@@ -3,6 +3,7 @@ import { isLogedIn } from "../middleware/isLogedIn.js";
 import { uploadMultiple } from "../middleware/multer.js";
 import { deleteConsentById, findConsentById, getAllConsent, saveConsentFormData, updateConsentById, uploadImage, uploadVideo } from "../controller/consentController/consentController.js";
 import { consentFormValidate, consentUpdateFormValidate } from "../validation/consentFormValidate.js";
+import fileUpload from 'express-fileupload';
 
 
 
@@ -20,7 +21,9 @@ consentRouter.patch('/consentById',isLogedIn,consentUpdateFormValidate,updateCon
 
 
 consentRouter.post('/uploadImage',isLogedIn,uploadMultiple,uploadImage)
-consentRouter.post('/uploadVideo',isLogedIn,uploadVideo)
+consentRouter.post('/uploadVideo',isLogedIn, fileUpload({
+    useTempFiles: false
+}),uploadVideo)
 
 
 
