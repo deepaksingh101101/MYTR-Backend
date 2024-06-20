@@ -100,3 +100,52 @@ export const getCaseTypeAnalytics = async (req, res) => {
         res.status(500).json({ status: false, message: "Internal Server Error" });
     }
 };
+
+// Age-wise analytics
+export const getAgeAnalytics = async (req, res) => {
+    const { startDate, endDate } = req.query;
+
+    try {
+        const data = await consentModel.aggregate([
+            {
+                $match: {
+                    createdAt: { $gte: new Date(startDate), $lte: new Date(endDate) }
+                }
+            },
+            {
+                $project: {
+                    dob: { $toDate: "$dob" },
+                    age: {
+                        $dateDiff: {
+                            startDate: { $toDate: "$dob" },
+                            endDate: "$$NOW",
+                            unit: "year"
+                        }
+                    }
+                }
+            },
+            {
+                $bucket: {
+                    groupBy: "$age",
+                    boundaries: [0, 16, 26, 51, 120],
+                    default: "Unknown",
+                    output: {
+                        count: { $sum: 1 }
+                    }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    ageRange: "$_id",
+                    count: 1
+                }
+            }
+        ]);
+
+        res.status(200).json(data);
+    } catch (error) {
+        console.error("Error fetching age analytics:", error);
+        res.status(500).json({ status: false, message: "Internal Server Error" });
+    }
+};
