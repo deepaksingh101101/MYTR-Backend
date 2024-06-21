@@ -2,13 +2,20 @@ import consentModel from '../../models/consentModel.js';
 
 // Get Forms Analytics
 export const getAdminAnalytics = async (req, res) => {
-    const { startDate, endDate, admin } = req.query;
+    let { startDate, endDate, admin } = req.query;
 
     try {
+
+        startDate = new Date(startDate);
+        startDate.setHours(0,0,0,0);
+
+        endDate = new Date(endDate);
+        endDate.setHours(23,59,59,999)
+
         const data = await consentModel.aggregate([
             {
                 $match: {
-                    createdAt: { $gte: new Date(startDate), $lte: new Date(endDate) },
+                    createdAt: { $gte: startDate, $lte: endDate },
                     createdBy: admin
                 }
             },
@@ -21,7 +28,7 @@ export const getAdminAnalytics = async (req, res) => {
             {
                 $project: {
                     _id: 0,
-                    date: "$_id.date",
+                    date: "$_id",
                     createdForms: 1
                 }
             }
@@ -36,13 +43,19 @@ export const getAdminAnalytics = async (req, res) => {
 
 // Gender-wise analytics
 export const getGenderAnalytics = async (req, res) => {
-    const { startDate, endDate } = req.query;
+    let { startDate, endDate } = req.query;
 
     try {
+        startDate = new Date(startDate);
+        startDate.setHours(0, 0, 0, 0);
+
+        endDate = new Date(endDate);
+        endDate.setHours(23, 59, 59, 999);
+
         const data = await consentModel.aggregate([
             {
                 $match: {
-                    createdAt: { $gte: new Date(startDate), $lte: new Date(endDate) }
+                    createdAt: { $gte: startDate, $lte: endDate }
                 }
             },
             {
@@ -69,13 +82,17 @@ export const getGenderAnalytics = async (req, res) => {
 
 // Case type-wise analytics
 export const getCaseTypeAnalytics = async (req, res) => {
-    const { startDate, endDate, caseType } = req.query;
+   let { startDate, endDate, caseType } = req.query;
+    startDate = new Date(startDate);
+    startDate.setHours(0, 0, 0, 0);
 
+    endDate = new Date(endDate);
+    endDate.setHours(23, 59, 59, 999);
     try {
         const data = await consentModel.aggregate([
             {
                 $match: {
-                    createdAt: { $gte: new Date(startDate), $lte: new Date(endDate) },
+                    createdAt: { $gte: startDate , $lte: endDate},
                     caseType: caseType
                 }
             },
@@ -88,7 +105,7 @@ export const getCaseTypeAnalytics = async (req, res) => {
             {
                 $project: {
                     _id: 0,
-                    date: "$_id.date",
+                    date: "$_id",
                     cases: 1
                 }
             }
@@ -103,13 +120,18 @@ export const getCaseTypeAnalytics = async (req, res) => {
 
 // Age-wise analytics
 export const getAgeAnalytics = async (req, res) => {
-    const { startDate, endDate } = req.query;
+    let { startDate, endDate } = req.query;
 
     try {
+        startDate = new Date(startDate);
+        startDate.setHours(0, 0, 0, 0);
+
+        endDate = new Date(endDate);
+        endDate.setHours(23, 59, 59, 999);
         const data = await consentModel.aggregate([
             {
                 $match: {
-                    createdAt: { $gte: new Date(startDate), $lte: new Date(endDate) }
+                    createdAt: { $gte: startDate, $lte: endDate }
                 }
             },
             {
