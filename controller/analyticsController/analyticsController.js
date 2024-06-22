@@ -1,4 +1,5 @@
 import consentModel from '../../models/consentModel.js';
+import userModel from '../../models/userModel.js';
 
 // Get Forms Analytics
 export const getAdminAnalytics = async (req, res) => {
@@ -168,6 +169,35 @@ export const getAgeAnalytics = async (req, res) => {
         res.status(200).json(data);
     } catch (error) {
         console.error("Error fetching age analytics:", error);
+        res.status(500).json({ status: false, message: "Internal Server Error" });
+    }
+};
+export const getTotalAdmins = async (req, res) => {
+    try {
+        const totalAdmins = await userModel.countDocuments({ isSuperAdmin: false });
+        res.status(200).json({ totalAdmins });
+    } catch (error) {
+        console.error("Error fetching total admins:", error);
+        res.status(500).json({ status: false, message: "Internal Server Error" });
+    }
+};
+export const getTotalConsents = async (req, res) => {
+    try {
+        const totalConsents = await consentModel.countDocuments();
+        res.status(200).json({ totalConsents });
+    } catch (error) {
+        console.error("Error fetching total consents:", error);
+        res.status(500).json({ status: false, message: "Internal Server Error" });
+    }
+};
+export const getRecentConsents = async (req, res) => {
+    try {
+        const recentConsents = await consentModel.find({}, { createdBy: 1, caseType: 1, createdAt: 1 })
+            .sort({ createdAt: -1 })
+            .limit(5);
+        res.status(200).json({ recentConsents });
+    } catch (error) {
+        console.error("Error fetching recent consents:", error);
         res.status(500).json({ status: false, message: "Internal Server Error" });
     }
 };
