@@ -148,10 +148,6 @@ console.log(template)
 
 
 
-// export const getAllCaseType = async (req, res, next) => {
-  
-//     res.status(200).json({status:true,caseType:["cancer","fever","cough","legal"]})
-// };
 
 
 

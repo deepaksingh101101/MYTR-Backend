@@ -52,6 +52,10 @@ const consentModelSchema=new mongoose.Schema({
         type:String,
         required:true,
     },
+    surgeonSignatureUrl:{
+        type:String,
+        required:true,
+    },
     VideoUrl:{
         type:String,
         required:true,

@@ -123,12 +123,17 @@ export const getCaseTypeAnalytics = async (req, res) => {
 export const getAgeAnalytics = async (req, res) => {
     let { startDate, endDate } = req.query;
 
+    if (new Date(startDate) > new Date(endDate)) {
+        return res.status(400).json({ status: false, message: "Start date cannot be greater than end date" });
+    }
+
     try {
         startDate = new Date(startDate);
         startDate.setHours(0, 0, 0, 0);
 
         endDate = new Date(endDate);
         endDate.setHours(23, 59, 59, 999);
+
         const data = await consentModel.aggregate([
             {
                 $match: {
@@ -148,13 +153,27 @@ export const getAgeAnalytics = async (req, res) => {
                 }
             },
             {
-                $bucket: {
-                    groupBy: "$age",
-                    boundaries: [0, 16, 26, 51, 120],
-                    default: "Unknown",
-                    output: {
-                        count: { $sum: 1 }
-                    }
+                $group: {
+                    _id: {
+                        $cond: [
+                            { $lt: ["$age", 18] },
+                            "1-18",
+                            {
+                                $cond: [
+                                    { $lt: ["$age", 30] },
+                                    "19-30",
+                                    {
+                                        $cond: [
+                                            { $lt: ["$age", 60] },
+                                            "31-60",
+                                            "60+"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    count: { $sum: 1 }
                 }
             },
             {
@@ -163,41 +182,56 @@ export const getAgeAnalytics = async (req, res) => {
                     ageRange: "$_id",
                     count: 1
                 }
+            },
+            {
+                $sort: { ageRange: 1 }
             }
         ]);
 
-        res.status(200).json(data);
+        // Ensure all age ranges are present in the response
+        const ageRanges = {
+            "1-18": 0,
+            "19-30": 0,
+            "31-60": 0,
+            "60+": 0
+        };
+
+        data.forEach(item => {
+            ageRanges[item.ageRange] = item.count;
+        });
+
+        const formattedData = Object.keys(ageRanges).map(range => ({
+            ageRange: range,
+            count: ageRanges[range]
+        }));
+
+        res.status(200).json(formattedData);
     } catch (error) {
         console.error("Error fetching age analytics:", error);
         res.status(500).json({ status: false, message: "Internal Server Error" });
     }
 };
-export const getTotalAdmins = async (req, res) => {
+export const getAnalyticsData = async (req, res) => {
     try {
-        const totalAdmins = await userModel.countDocuments({ isSuperAdmin: false });
-        res.status(200).json({ totalAdmins });
-    } catch (error) {
-        console.error("Error fetching total admins:", error);
-        res.status(500).json({ status: false, message: "Internal Server Error" });
-    }
-};
-export const getTotalConsents = async (req, res) => {
-    try {
+        // Fetch total number of consent forms
         const totalConsents = await consentModel.countDocuments();
-        res.status(200).json({ totalConsents });
-    } catch (error) {
-        console.error("Error fetching total consents:", error);
-        res.status(500).json({ status: false, message: "Internal Server Error" });
-    }
-};
-export const getRecentConsents = async (req, res) => {
-    try {
+
+        // Fetch total number of admins (excluding super admins)
+        const totalAdmins = await userModel.countDocuments({ isSuperAdmin: false });
+
+        // Fetch 5 most recent consent forms
         const recentConsents = await consentModel.find({}, { createdBy: 1, caseType: 1, createdAt: 1 })
             .sort({ createdAt: -1 })
             .limit(5);
-        res.status(200).json({ recentConsents });
+
+        // Combine the data into one response
+        res.status(200).json({ 
+            totalConsents, 
+            totalAdmins, 
+            recentConsents 
+        });
     } catch (error) {
-        console.error("Error fetching recent consents:", error);
+        console.error("Error fetching analytics data:", error);
         res.status(500).json({ status: false, message: "Internal Server Error" });
     }
 };
