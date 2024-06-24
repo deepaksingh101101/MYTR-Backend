@@ -12,7 +12,7 @@ import { uploadVideoMiddleware } from '../../helpers/uploadVideoMiddleware.js';
 
 export const saveConsentFormData = async (req, res, next) => {
     const errors = validationResult(req);
-    const {address,dob,gender, patientName, gaurdianName, createdBy,caseType, question, signatureUrl, patientId, mobileNo, adharCard,VideoUrl,relation, customFields } = req.body;
+    const {address,dob,gender, patientName, gaurdianName, createdBy,caseType, question, patirntSignatureUrl,surgeonSignatureUrl, patientId, mobileNo, adharCard,VideoUrl,relation, customFields } = req.body;
 
     try {
         if (errors.isEmpty()) {
@@ -23,7 +23,8 @@ export const saveConsentFormData = async (req, res, next) => {
                 gaurdianName,
                 caseType,
                 question,
-                signatureUrl,
+                patientSignatureUrl,
+                surgeonSignatureUrl,
                 VideoUrl,
                 patientId,
                 mobileNo,
