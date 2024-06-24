@@ -17,7 +17,7 @@ export const consentFormValidate = [
   body('relation',"Relation with  patient is required").notEmpty(),
   body('customFields',"Custom Fields are required").notEmpty(),
 ]
-
+//updated validation
 
 export const consentUpdateFormValidate = [
   body('patientName', 'Patient Name is Required').notEmpty(),
