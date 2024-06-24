@@ -48,7 +48,7 @@ const consentModelSchema=new mongoose.Schema({
         type:String,
         required:true,
     },
-    signatureUrl:{
+    patientSignatureUrl:{
         type:String,
         required:true,
     },
