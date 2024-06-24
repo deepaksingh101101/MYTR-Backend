@@ -5,6 +5,8 @@ export const consentFormValidate = [
   body('gaurdianName', 'Gaurdian Name is Required').notEmpty(),
   body('caseType', 'Case Type is Required').notEmpty(),
   body('question', 'Question Should not be empty').notEmpty(),
+  body('patientSignatureUrl', 'Patient Signature Url is required').notEmpty(),
+  body('surgeonSignatureUrl', 'Surgeon Signature Url is required').notEmpty(),
   body('signatureUrl', 'Signature Url is required').notEmpty(),
   body('VideoUrl', 'Video Url is required').notEmpty(),
   body('createdBy', 'Should be and email').isEmail(),
