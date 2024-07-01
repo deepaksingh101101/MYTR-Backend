@@ -235,3 +235,20 @@ export const getAnalyticsData = async (req, res) => {
         res.status(500).json({ status: false, message: "Internal Server Error" });
     }
 };
+export const getConsentStatusCounts = async (req, res) => {
+    try {
+        const [inProgressCount, submittedCount] = await Promise.all([
+            consentModel.countDocuments({ status: 'in-progress' }),
+            consentModel.countDocuments({ status: 'submitted' })
+        ]);
+
+        res.status(200).json({
+            status: true,
+            inProgressCount,
+            submittedCount
+        });
+    } catch (error) {
+        console.error("Error fetching consent status counts:", error);
+        res.status(500).json({ status: false, message: "Internal Server Error" });
+    }
+};
