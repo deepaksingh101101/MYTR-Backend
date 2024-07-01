@@ -12,36 +12,36 @@ import { uploadVideoMiddleware } from '../../helpers/uploadVideoMiddleware.js';
 
 export const saveConsentFormData = async (req, res, next) => {
     const errors = validationResult(req);
-    const {address,dob,gender, patientName, gaurdianName, createdBy,caseType, question, patientSignatureUrl,surgeonSignatureUrl, patientId, mobileNo, adharCard,VideoUrl,relation, customFields } = req.body;
+    const { patientId, patientSignatureUrl, ...data } = req.body;
 
     try {
         if (errors.isEmpty()) {
+            // Check if a consent form with the given patientId already exists
+            let consent = await consentModel.findOne({ patientId });
 
-            // Create a new instance of the consent model
-            const consentData = new consentModel({
-                patientName,
-                gaurdianName,
-                caseType,
-                question,
-                patientSignatureUrl,
-                surgeonSignatureUrl,
-                VideoUrl,
-                patientId,
-                mobileNo,
-                adharCard,
-                createdBy,
-                address,
-                dob,
-                gender,
-                relation,
-                customFields
-            });
+            if (consent) {
+                // Update the existing consent form with the new data
+                Object.assign(consent, data);
 
+                // If patient signature is included, change status to submitted
+                if (patientSignatureUrl) {
+                    consent.patientSignatureUrl = patientSignatureUrl;
+                    consent.status = 'submitted';
+                }
+            } else {
+                // Create a new consent form
+                consent = new consentModel({ patientId, patientSignatureUrl, ...data });
+
+                // If patient signature is included, change status to submitted
+                if (patientSignatureUrl) {
+                    consent.status = 'submitted';
+                }
+            }
 
             // Save the consent data to the database
-            await consentData.save();
+            await consent.save();
 
-            return res.status(200).json({ status: true,consentData, message: "Consent data saved successfully" });
+            return res.status(200).json({ status: true, consent, message: "Consent data saved successfully" });
         } else {
             return res.status(422).json({ status: false, errors: errors.array() });
         }
@@ -50,6 +50,7 @@ export const saveConsentFormData = async (req, res, next) => {
         return res.status(500).json({ status: false, message: "Internal Server Error" });
     }
 };
+
 
 export const getAllConsent = async (req, res, next) => {
     try {
