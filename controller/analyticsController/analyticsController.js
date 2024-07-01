@@ -1,5 +1,6 @@
 import consentModel from '../../models/consentModel.js';
 import userModel from '../../models/userModel.js';
+import moment from 'moment';
 
 // Get Forms Analytics
 export const getAdminAnalytics = async (req, res) => {
@@ -211,30 +212,6 @@ export const getAgeAnalytics = async (req, res) => {
         res.status(500).json({ status: false, message: "Internal Server Error" });
     }
 };
-export const getAnalyticsData = async (req, res) => {
-    try {
-        // Fetch total number of consent forms
-        const totalConsents = await consentModel.countDocuments();
-
-        // Fetch total number of admins (excluding super admins)
-        const totalAdmins = await userModel.countDocuments({ isSuperAdmin: false });
-
-        // Fetch 5 most recent consent forms
-        const recentConsents = await consentModel.find({}, { createdBy: 1, caseType: 1, createdAt: 1 })
-            .sort({ createdAt: -1 })
-            .limit(5);
-
-        // Combine the data into one response
-        res.status(200).json({ 
-            totalConsents, 
-            totalAdmins, 
-            recentConsents 
-        });
-    } catch (error) {
-        console.error("Error fetching analytics data:", error);
-        res.status(500).json({ status: false, message: "Internal Server Error" });
-    }
-};
 export const getConsentStatusCounts = async (req, res) => {
     try {
         const [inProgressCount, submittedCount] = await Promise.all([
@@ -249,6 +226,67 @@ export const getConsentStatusCounts = async (req, res) => {
         });
     } catch (error) {
         console.error("Error fetching consent status counts:", error);
+        res.status(500).json({ status: false, message: "Internal Server Error" });
+    }
+};
+
+
+export const getConsentFormAnalytics = async (req, res) => {
+    let { period } = req.query;
+    if (!period) {
+        return res.status(400).json({ status: false, message: "Period query parameter is required" });
+    }
+
+    try {
+        let startDate, endDate, format;
+        const today = moment().startOf('day');
+
+        if (period === 'week') {
+            startDate = today.clone().startOf('isoWeek');
+            endDate = today.clone().endOf('isoWeek');
+            format = '%Y-%m-%d'; // Format for days
+        } else if (period === 'month') {
+            startDate = today.clone().startOf('month');
+            endDate = today.clone().endOf('month');
+            format = '%Y-%m-%d'; // Format for days within a month
+        } else if (period === 'year') {
+            startDate = today.clone().startOf('year');
+            endDate = today.clone().endOf('year');
+            format = '%Y-%m'; // Format for months within a year
+        } else {
+            return res.status(400).json({ status: false, message: "Invalid period query parameter" });
+        }
+
+        const data = await consentModel.aggregate([
+            {
+                $match: {
+                    createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
+                    status: 'submitted' // Only count consent forms with 'submitted' status
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        $dateToString: { format: format, date: "$createdAt" }
+                    },
+                    count: { $sum: 1 }
+                }
+            },
+            {
+                $sort: { _id: 1 }
+            },
+            {
+                $project: {
+                    date: "$_id",
+                    count: 1,
+                    _id: 0
+                }
+            }
+        ]);
+
+        res.status(200).json({ status: true, data });
+    } catch (error) {
+        console.error("Error fetching consent form analytics:", error);
         res.status(500).json({ status: false, message: "Internal Server Error" });
     }
 };
