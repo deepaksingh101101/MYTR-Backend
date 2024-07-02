@@ -86,8 +86,8 @@ export const registerController = async (req, res, next) => {
       return res.status(422).json({ errors: errors.array() });
     }
 
-    const { email, password, isSuperAdmin } = req.body;
-console.log(email, password, isSuperAdmin)
+    const { name,email, password, isSuperAdmin } = req.body;
+console.log(name,email, password, isSuperAdmin)
     const token = req.cookies?.accessToken || (req.header("Authorization")?.replace("Bearer ", ""));
     if (!token) {
       return res.status(400).json({
@@ -134,6 +134,7 @@ console.log(email, password, isSuperAdmin)
 
     const hashedPassword = await bcrypt.hash(password, 12);
     const newUser = new userModel({
+      name:name,
       email: email,
       password: hashedPassword,
       isSuperAdmin: isSuperAdmin,
@@ -432,5 +433,18 @@ export const deleteUser = async (req, res, next) => {
       return res.status(500).json({ status: false, message: "Internal Server Error" });
   }
 };
+export const getAdminByEmail = async (req, res) => {
+  const { email } = req.params;
 
+  try {
+      const admin = await userModel.findOne({ email });
+      if (!admin) {
+          return res.status(404).json({ status: false, message: "Admin not found" });
+      }
+      return res.status(200).json({ status: true, admin });
+  } catch (error) {
+      console.error("Error fetching admin by email:", error);
+      return res.status(500).json({ status: false, message: "Internal Server Error" });
+  }
+};
 
