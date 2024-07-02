@@ -1,13 +1,11 @@
 import express from "express"
-import {  accessTokenFromRefresh, deleteUser, getAllUsers, loginController, registerController, resetPasswordAfterVerification, sendOtp, testing, verifyOtp,updateAdminProfile } from "../controller/userController/userController.js";
+import {  accessTokenFromRefresh, deleteUser, getAllUsers, loginController, registerController, resetPasswordAfterVerification, sendOtp, testing, verifyOtp,updateAdminProfile,getAdminByEmail } from "../controller/userController/userController.js";
 import { isLogedIn } from "../middleware/isLogedIn.js";
-
 import  { ForgetDataValidate, loginDataValidate, newPasswordDataValidate, otpDataValidate, registerDataValidate }  from '../validation/loginDataValidate.js'
 import { isSuperAdmin } from "../middleware/isSuperAdmin.js";
 
 
 const userRouter=express.Router();
-
 
 
 userRouter.post('/test',isLogedIn,testing)
@@ -20,6 +18,7 @@ userRouter.post('/getAccessFromRefresh',accessTokenFromRefresh)
 userRouter.get('/getAllUsers',isLogedIn,getAllUsers)
 userRouter.delete('/deleteAdmin',isLogedIn,isSuperAdmin,deleteUser)
 userRouter.patch('/updateAdminProfile', isLogedIn, isSuperAdmin, updateAdminProfile);
+userRouter.get('/getAdminByEmail/:email', isLogedIn, isSuperAdmin, getAdminByEmail);
 
 
 
