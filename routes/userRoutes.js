@@ -17,7 +17,7 @@ userRouter.post('/changePassword',newPasswordDataValidate,resetPasswordAfterVeri
 userRouter.post('/getAccessFromRefresh',accessTokenFromRefresh)
 userRouter.get('/getAllUsers',isLogedIn,getAllUsers)
 userRouter.delete('/deleteAdmin',isLogedIn,isSuperAdmin,deleteUser)
-userRouter.patch('/updateAdminProfile', isLogedIn, isSuperAdmin, updateAdminProfile);
+userRouter.post('/updateAdminProfile', isLogedIn, isSuperAdmin, updateAdminProfile);
 userRouter.get('/getAdminByEmail/:email', isLogedIn, isSuperAdmin, getAdminByEmail);
 
 
