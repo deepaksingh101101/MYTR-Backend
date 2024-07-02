@@ -84,3 +84,34 @@ export const deleteIssue = async (req, res) => {
         return res.status(500).json({ status: false, message: "Internal Server Error" });
     }
 };
+
+// Get Issue by ID
+export const getIssueById = async (req, res) => {
+    const { issueId } = req.params;
+
+    try {
+        const issue = await issueModel.findById(issueId);
+        if (!issue) {
+            return res.status(404).json({ status: false, message: "Issue not found" });
+        }
+        return res.status(200).json({ status: true, issue });
+    } catch (error) {
+        console.error("Error fetching issue by ID:", error);
+        return res.status(500).json({ status: false, message: "Internal Server Error" });
+    }
+};
+
+export const getIssuesByEmail = async (req, res) => {
+    const email = req.userInfo.email; // Get the email of the logged-in user
+
+    try {
+        const issues = await issueModel.find({ raisedBy: email });
+        if (!issues.length) {
+            return res.status(404).json({ status: false, message: "No issues found for this user" });
+        }
+        return res.status(200).json({ status: true, issues });
+    } catch (error) {
+        console.error("Error fetching issues by email:", error);
+        return res.status(500).json({ status: false, message: "Internal Server Error" });
+    }
+};
