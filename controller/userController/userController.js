@@ -53,6 +53,32 @@ export const loginController = async (req, res, next) => {
 };
 
 
+export const updateAdminProfile = async (req, res) => {
+    const { email, name, isSuperAdmin } = req.body;
+
+    try {
+        // Ensure only super admins can update admin profiles
+        if (!req.userInfo.isSuperAdmin) {
+            return res.status(403).json({ status: false, message: "Forbidden: Only super admins can update admin profiles" });
+        }
+
+        const user = await userModel.findOneAndUpdate(
+            {email:email},
+            { name, isSuperAdmin },
+            { new: true }
+        );
+
+        if (!user) {
+            return res.status(404).json({ status: false, message: "User not found" });
+        }
+
+        return res.status(200).json({ status: true, message: "Admin profile updated successfully", user });
+    } catch (error) {
+        console.error("Error updating admin profile:", error);
+        return res.status(500).json({ status: false, message: "Internal Server Error" });
+    }
+};
+
 export const registerController = async (req, res, next) => {
   try {
     const errors = validationResult(req);
