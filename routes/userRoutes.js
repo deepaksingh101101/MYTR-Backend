@@ -1,5 +1,5 @@
 import express from "express"
-import {  accessTokenFromRefresh, deleteUser, getAllUsers, loginController, registerController, resetPasswordAfterVerification, sendOtp, testing, verifyOtp} from "../controller/userController/userController.js";
+import {  accessTokenFromRefresh, deleteUser, getAllUsers, loginController, registerController, resetPasswordAfterVerification, sendOtp, testing, verifyOtp,updateAdminProfile } from "../controller/userController/userController.js";
 import { isLogedIn } from "../middleware/isLogedIn.js";
 
 import  { ForgetDataValidate, loginDataValidate, newPasswordDataValidate, otpDataValidate, registerDataValidate }  from '../validation/loginDataValidate.js'
@@ -19,6 +19,7 @@ userRouter.post('/changePassword',newPasswordDataValidate,resetPasswordAfterVeri
 userRouter.post('/getAccessFromRefresh',accessTokenFromRefresh)
 userRouter.get('/getAllUsers',isLogedIn,getAllUsers)
 userRouter.delete('/deleteAdmin',isLogedIn,isSuperAdmin,deleteUser)
+userRouter.patch('/updateAdminProfile', isLogedIn, isSuperAdmin, updateAdminProfile);
 
 
 
