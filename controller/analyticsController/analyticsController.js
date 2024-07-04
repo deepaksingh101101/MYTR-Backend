@@ -143,10 +143,24 @@ export const getAgeAnalytics = async (req, res) => {
             },
             {
                 $project: {
-                    dob: { $toDate: "$dob" },
+                    dob: {
+                        $dateFromString: {
+                            dateString: "$dob",
+                            format: "%d/%m/%Y", // Adjust this format to match your data
+                            onError: null,
+                            onNull: null
+                        }
+                    },
                     age: {
                         $dateDiff: {
-                            startDate: { $toDate: "$dob" },
+                            startDate: {
+                                $dateFromString: {
+                                    dateString: "$dob",
+                                    format: "%d/%m/%Y", // Adjust this format to match your data
+                                    onError: null,
+                                    onNull: null
+                                }
+                            },
                             endDate: "$$NOW",
                             unit: "year"
                         }
@@ -287,6 +301,17 @@ export const getConsentFormAnalytics = async (req, res) => {
         res.status(200).json({ status: true, data });
     } catch (error) {
         console.error("Error fetching consent form analytics:", error);
+        res.status(500).json({ status: false, message: "Internal Server Error" });
+    }
+};
+export const getRecentConsents = async (req, res) => {
+    try {
+        const recentConsents = await consentModel.find({}, { createdBy: 1, caseType: 1, createdAt: 1 })
+            .sort({ createdAt: -1 })
+            .limit(5);
+        res.status(200).json({ recentConsents });
+    } catch (error) {
+        console.error("Error fetching recent consents:", error);
         res.status(500).json({ status: false, message: "Internal Server Error" });
     }
 };
