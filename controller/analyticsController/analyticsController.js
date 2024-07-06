@@ -146,7 +146,7 @@ export const getAgeAnalytics = async (req, res) => {
                     dob: {
                         $dateFromString: {
                             dateString: "$dob",
-                            format: "%d/%m/%Y", // Adjust this format to match your data
+                            format: "%Y-%m-%d", // Adjust this format to match your data
                             onError: null,
                             onNull: null
                         }
@@ -156,7 +156,7 @@ export const getAgeAnalytics = async (req, res) => {
                             startDate: {
                                 $dateFromString: {
                                     dateString: "$dob",
-                                    format: "%d/%m/%Y", // Adjust this format to match your data
+                                    format: "%Y-%m-%d", // Adjust this format to match your data
                                     onError: null,
                                     onNull: null
                                 }
@@ -220,12 +220,13 @@ export const getAgeAnalytics = async (req, res) => {
             count: ageRanges[range]
         }));
 
-        res.status(200).json(formattedData);
+        res.status(200).json({ status: true, data: formattedData });
     } catch (error) {
         console.error("Error fetching age analytics:", error);
         res.status(500).json({ status: false, message: "Internal Server Error" });
     }
 };
+
 export const getConsentStatusCounts = async (req, res) => {
     try {
         const [inProgressCount, submittedCount] = await Promise.all([
