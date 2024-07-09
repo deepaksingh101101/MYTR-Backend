@@ -13,7 +13,7 @@ consentRouter.post('/submitConsent',saveConsentFormData)
 consentRouter.get('/getAllConsent',isLogedIn,getAllConsent)
 consentRouter.delete('/consentById',isLogedIn,deleteConsentById)
 consentRouter.get('/consentById',isLogedIn,findConsentById)
-consentRouter.patch('/consentById',isLogedIn,consentUpdateFormValidate,updateConsentById)
+consentRouter.post('/consentById',isLogedIn,consentUpdateFormValidate,updateConsentById)
 
 
 
