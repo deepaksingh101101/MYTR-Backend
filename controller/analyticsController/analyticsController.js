@@ -120,6 +120,9 @@ export const getCaseTypeAnalytics = async (req, res) => {
     }
 };
 
+
+
+
 // Age-wise analytics
 export const getAgeAnalytics = async (req, res) => {
     let { startDate, endDate } = req.query;
