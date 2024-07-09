@@ -257,47 +257,44 @@ export const getConsentFormAnalytics = async (req, res) => {
         const today = moment().startOf('day');
 
         if (period === 'week') {
-            startDate = today.clone().startOf('isoWeek');
-            endDate = today.clone().endOf('isoWeek');
-            format = '%Y-%m-%d'; // Format for days
+            endDate = today.clone().endOf('day');
+            startDate = today.clone().subtract(6, 'days').startOf('day');
+            format = 'YYYY-MM-DD'; // Format for days
         } else if (period === 'month') {
-            startDate = today.clone().startOf('month');
-            endDate = today.clone().endOf('month');
-            format = '%Y-%m-%d'; // Format for days within a month
+            endDate = today.clone().endOf('day');
+            startDate = today.clone().subtract(1, 'month').add(1, 'day').startOf('day');
+            format = 'YYYY-MM-DD'; // Format for days within a month
         } else if (period === 'year') {
-            startDate = today.clone().startOf('year');
-            endDate = today.clone().endOf('year');
-            format = '%Y-%m'; // Format for months within a year
+            endDate = today.clone().endOf('day');
+            startDate = today.clone().subtract(1, 'year').add(1, 'day').startOf('day');
+            format = 'YYYY-MM'; // Format for months within a year
         } else {
             return res.status(400).json({ status: false, message: "Invalid period query parameter" });
         }
 
-        const data = await consentModel.aggregate([
-            {
-                $match: {
-                    createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
-                    status: 'submitted' // Only count consent forms with 'submitted' status
-                }
-            },
-            {
-                $group: {
-                    _id: {
-                        $dateToString: { format: format, date: "$createdAt" }
-                    },
-                    count: { $sum: 1 }
-                }
-            },
-            {
-                $sort: { _id: 1 }
-            },
-            {
-                $project: {
-                    date: "$_id",
-                    count: 1,
-                    _id: 0
-                }
+        console.log(`Start Date: ${startDate.toDate()}`);
+        console.log(`End Date: ${endDate.toDate()}`);
+
+        const consents = await consentModel.find({
+            createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
+            status: 'submitted'
+        }).exec();
+
+        const groupedData = consents.reduce((acc, consent) => {
+            const date = moment(consent.createdAt).format(format);
+            if (!acc[date]) {
+                acc[date] = 0;
             }
-        ]);
+            acc[date]++;
+            return acc;
+        }, {});
+
+        const data = Object.keys(groupedData).map(date => ({
+            date,
+            count: groupedData[date]
+        }));
+
+        data.sort((a, b) => new Date(a.date) - new Date(b.date));
 
         res.status(200).json({ status: true, data });
     } catch (error) {
@@ -305,6 +302,72 @@ export const getConsentFormAnalytics = async (req, res) => {
         res.status(500).json({ status: false, message: "Internal Server Error" });
     }
 };
+
+// export const getConsentFormAnalytics = async (req, res) => {
+//     let { period } = req.query;
+//     if (!period) {
+//         return res.status(400).json({ status: false, message: "Period query parameter is required" });
+//     }
+
+//     try {
+//         let startDate, endDate, format;
+//         const today = moment().startOf('day');
+
+//         if (period === 'week') {
+//             startDate = today.clone().startOf('isoWeek');
+//             endDate = today.clone().endOf('isoWeek');
+//             format = '%Y-%m-%d'; // Format for days
+//             console.log(startDate.toDate())
+//             console.log(endDate.toDate())
+//         } else if (period === 'month') {
+//             startDate = today.clone().startOf('month');
+//             endDate = today.clone().endOf('month');
+//             format = '%Y-%m-%d'; // Format for days within a month
+//         } else if (period === 'year') {
+//             startDate = today.clone().startOf('year');
+//             endDate = today.clone().endOf('year');
+//             format = '%Y-%m'; // Format for months within a year
+//         } else {
+//             return res.status(400).json({ status: false, message: "Invalid period query parameter" });
+//         }
+
+      
+//         const data = await consentModel.aggregate([
+//             {
+//                 $match: {
+//                     createdAt: { $gte: startDate.toDate(), $lte: endDate.toDate() },
+//                     status: 'submitted' // Only count consent forms with 'submitted' status
+//                 }
+//             },
+//             {
+//                 $group: {
+//                     _id: {
+//                         $dateToString: { format: format, date: "$createdAt" }
+//                     },
+//                     count: { $sum: 1 }
+//                 }
+//             },
+//             {
+//                 $sort: { _id: 1 }
+//             },
+//             {
+//                 $project: {
+//                     date: "$_id",
+//                     count: 1,
+//                     _id: 0
+//                 }
+//             }
+//         ]);
+
+//         res.status(200).json({ status: true, data });
+//     } catch (error) {
+//         console.error("Error fetching consent form analytics:", error);
+//         res.status(500).json({ status: false, message: "Internal Server Error" });
+//     }
+// };
+
+
+
 export const getRecentConsents = async (req, res) => {
     try {
         const recentConsents = await consentModel.find({}, { createdBy: 1, caseType: 1, createdAt: 1 })
