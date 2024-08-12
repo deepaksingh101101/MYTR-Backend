@@ -8,7 +8,7 @@ const issueRouter = express.Router();
 
 issueRouter.post('/createIssue', isLogedIn, createIssue);
 issueRouter.get('/getIssues', isLogedIn, getIssues);
-issueRouter.patch('/updateIssueStatus', isLogedIn, updateIssueStatus);
+issueRouter.post('/updateIssueStatus', isLogedIn, updateIssueStatus);
 issueRouter.delete('/deleteIssue', isLogedIn, deleteIssue);
 issueRouter.get('/issue/:issueId', isLogedIn, getIssueById);
 issueRouter.get('/userIssues', isLogedIn, getIssuesByEmail);
