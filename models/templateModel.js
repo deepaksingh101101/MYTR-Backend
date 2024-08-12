@@ -23,7 +23,7 @@ const faqSchema= new mongoose.Schema({
 
     videoUrl:{
         type:String,
-        required:true
+        required: false
     }
 })
 
@@ -34,7 +34,7 @@ const optionSchema= new mongoose.Schema({
     },
     description:{
         type:String,
-        required:true
+        required:false
     },
     imageUrl:[String],
     videoUrl:{
