@@ -63,7 +63,7 @@ const templateModelSchema = new mongoose.Schema({
     customFields:[customFieldSchema],//array of custom fields referencing to the customfieldSchema
     videoUrl:{
         type:String,
-        required:true,
+        required:false,
     },
     createdBy: {
         type: String,
