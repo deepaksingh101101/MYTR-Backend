@@ -4,6 +4,7 @@ export const faqDataValidate = [
   body('caseType', 'Case Type is required').notEmpty(),
   body('faqs.*.title', 'Title is required').notEmpty(),
   body('faqs.*.description', 'FAQ description is required').notEmpty(),
+  body('faqs.*.imageUrl', 'FAQ image URL is required').notEmpty(),
 ];
 export const templateCreateDataValidate = [
   body('caseType', 'Case Type is Required').notEmpty(),

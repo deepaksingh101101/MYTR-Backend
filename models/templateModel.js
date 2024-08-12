@@ -22,8 +22,7 @@ const faqSchema= new mongoose.Schema({
     imageUrl:[String],
 
     videoUrl:{
-        type:String,
-        required: false
+        type:String
     }
 })
 
