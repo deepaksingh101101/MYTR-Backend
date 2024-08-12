@@ -22,8 +22,7 @@ const faqSchema= new mongoose.Schema({
     imageUrl:[String],
 
     videoUrl:{
-        type:String,
-        required: false
+        type:String
     }
 })
 
@@ -63,7 +62,6 @@ const templateModelSchema = new mongoose.Schema({
     customFields:[customFieldSchema],//array of custom fields referencing to the customfieldSchema
     videoUrl:{
         type:String,
-        required:false,
     },
     createdBy: {
         type: String,
