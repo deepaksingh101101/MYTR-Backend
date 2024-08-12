@@ -21,9 +21,7 @@ const faqSchema= new mongoose.Schema({
 
     imageUrl:[String],
 
-    videoUrl:{
-        type:String
-    }
+    videoUrl:[String]
 })
 
 const optionSchema= new mongoose.Schema({
@@ -36,9 +34,7 @@ const optionSchema= new mongoose.Schema({
         required:false
     },
     imageUrl:[String],
-    videoUrl:{
-        type:String,
-    }
+    videoUrl:[String]
 });
 
 const customFieldSchema= new mongoose.Schema({
@@ -60,9 +56,7 @@ const templateModelSchema = new mongoose.Schema({
     questions: [questionSchema], // Array of questions referencing the question schema
     faqs:[faqSchema],//array of faqs referencing the faq schema
     customFields:[customFieldSchema],//array of custom fields referencing to the customfieldSchema
-    videoUrl:{
-        type:String,
-    },
+    videoUrl:[String],
     createdBy: {
         type: String,
     },
