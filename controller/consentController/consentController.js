@@ -2,6 +2,7 @@
 import {validationResult} from 'express-validator'
 import consentModel from '../../models/consentModel.js';
 import path, { parse } from 'path'
+import templateModel from '../../models/templateModel.js';
 
 import { getStorage, ref ,uploadBytesResumable } from 'firebase/storage'
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth"
