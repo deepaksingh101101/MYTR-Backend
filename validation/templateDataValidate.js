@@ -18,6 +18,7 @@ export const templateCreateDataValidate = [
   body('customFields.*.options.*.imageUrl', 'Option image URL is required').optional().notEmpty(),
   body('customFields.*.options.*.videoUrl', 'Option video URL is required').optional().notEmpty(),
   body('createdBy', 'Created By is Required').notEmpty().isString().withMessage('Created By should be a string'),
+  body('summary','Summary is required').optional().notEmpty(),
 ];
 
 export const templateEditDataValidate = [
@@ -32,6 +33,7 @@ export const templateEditDataValidate = [
     body('customFields.*.options.*.imageUrl', 'Option image URL is required').optional().notEmpty(),
     body('customFields.*.options.*.videoUrl', 'Option video URL is required').optional().notEmpty(),
     body('updatedBy', 'Updated By is Required').notEmpty().isString().withMessage('Updated By should be a string'),
+    body('summary','Summary is required').optional().notEmpty(),
   ];
 
   

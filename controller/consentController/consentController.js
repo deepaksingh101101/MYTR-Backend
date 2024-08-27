@@ -115,7 +115,16 @@ export const findConsentById = async (req, res, next) => {
         if (!consent) {
             return res.status(404).json({ status: false, message: "No consent data found with this ID" });
         }
-        return res.status(200).json({ status: true, consent });
+        const template = await templateModel.findOne({ caseType: consent.caseType }); 
+
+        if (!template || !template.summary) {
+            console.warn("No template or summary found for case type:", consent.caseType);
+        }
+        return res.status(200).json({ 
+            status: true, 
+            consent ,
+            summary:template?template.summary:null
+        });
     } catch (error) {
         console.error("Error:", error);
         return res.status(500).json({ status: false, message: "Internal Server Error" });

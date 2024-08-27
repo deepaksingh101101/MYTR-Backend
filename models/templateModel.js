@@ -68,6 +68,9 @@ const templateModelSchema = new mongoose.Schema({
     },
     deltaForm:{
         type:Object
+    },
+    summary:{
+        type:String
     }
 }, {
     timestamps: true
